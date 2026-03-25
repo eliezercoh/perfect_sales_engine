@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GoPerfect Sales Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #F4F6F9;
+  --white: #FFFFFF;
+  --navy: #0B1628;
+  --navy-mid: #1A2A42;
+  --lime: #A8E63D;
+  --lime-dark: #87C41E;
+  --lime-soft: rgba(168,230,61,0.14);
+  --lime-border: rgba(135,196,30,0.35);
+  --text: #0B1628;
+  --text-mid: #374B66;
+  --text-muted: #7A8EA8;
+  --border: #DDE3ED;
+  --amber-soft: rgba(245,158,11,0.08);
+  --amber-border: rgba(245,158,11,0.28);
+  --amber-text: #7A4F0A;
+  --green-ok: #22C55E;
+  --shadow-sm: 0 1px 3px rgba(11,22,40,0.07), 0 1px 2px rgba(11,22,40,0.04);
+  --shadow-md: 0 4px 16px rgba(11,22,40,0.1);
+  --shadow-lg: 0 10px 36px rgba(11,22,40,0.13);
+}
+
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; overflow-x: hidden; }
+
+.wrapper { max-width: 760px; margin: 0 auto; padding: 36px 20px 80px; }
+
+/* TOP BAR */
+.top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.logo { display: flex; align-items: center; gap: 9px; }
+.logo-mark { width: 34px; height: 34px; background: var(--navy); border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.logo-name { font-size: 16px; font-weight: 700; color: var(--navy); letter-spacing: -0.3px; }
+.logo-name em { font-style: normal; color: var(--lime-dark); }
+.status-pill { display: flex; align-items: center; gap: 6px; background: var(--white); border: 1px solid var(--border); border-radius: 20px; padding: 5px 12px; font-size: 11px; font-weight: 500; color: var(--text-mid); box-shadow: var(--shadow-sm); }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--lime-dark); animation: pulse 2.2s ease infinite; }
+@keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(135,196,30,0.4); } 50% { box-shadow: 0 0 0 5px rgba(135,196,30,0); } }
+
+/* HERO */
+.hero { background: var(--navy); border-radius: 20px; padding: 30px 32px 28px; margin-bottom: 20px; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; top: -70px; right: -70px; width: 260px; height: 260px; border-radius: 50%; background: radial-gradient(circle, rgba(168,230,61,0.2) 0%, transparent 65%); pointer-events: none; }
+.hero::after { content: ''; position: absolute; bottom: -50px; left: 30px; width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, rgba(168,230,61,0.07) 0%, transparent 65%); pointer-events: none; }
+.hero-inner { position: relative; z-index: 1; }
+.hero-eye { display: inline-flex; align-items: center; gap: 6px; background: rgba(168,230,61,0.14); border: 1px solid rgba(168,230,61,0.26); border-radius: 20px; padding: 4px 12px; font-size: 11px; font-weight: 600; color: var(--lime); letter-spacing: 0.3px; margin-bottom: 14px; }
+.hero h1 { font-size: 28px; font-weight: 700; color: #fff; letter-spacing: -0.6px; line-height: 1.15; margin-bottom: 10px; }
+.hero h1 em { font-style: normal; color: var(--lime); }
+.hero p { font-size: 14px; color: rgba(255,255,255,0.48); line-height: 1.55; max-width: 500px; margin-bottom: 20px; }
+.hero-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.htag { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 4px 12px; font-size: 11.5px; font-weight: 500; color: rgba(255,255,255,0.5); }
+.htag.hi { background: rgba(168,230,61,0.14); border-color: rgba(168,230,61,0.28); color: var(--lime); }
+
+/* INPUT CARD */
+.input-card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin-bottom: 14px; box-shadow: var(--shadow-sm); }
+.card-label { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 16px; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+@media (max-width: 520px) { .two-col { grid-template-columns: 1fr; } }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field-label { font-size: 12.5px; font-weight: 600; color: var(--navy); }
+
+input[type="url"], input[type="text"], textarea {
+  width: 100%; background: var(--bg); border: 1.5px solid var(--border); border-radius: 10px;
+  color: var(--text); font-family: 'Inter', sans-serif; font-size: 14px;
+  padding: 10px 13px; transition: border-color 0.18s, box-shadow 0.18s, background 0.18s; outline: none; resize: vertical;
+}
+input:focus, textarea:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(11,22,40,0.07); background: var(--white); }
+input::placeholder, textarea::placeholder { color: var(--text-muted); font-size: 13px; }
+textarea { min-height: 145px; line-height: 1.6; }
+
+/* BUTTON */
+.gen-btn {
+  width: 100%; padding: 15px 24px; background: var(--navy); border: none; border-radius: 12px;
+  color: white; font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer;
+  letter-spacing: -0.1px; transition: background 0.18s, transform 0.1s, box-shadow 0.18s;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  box-shadow: var(--shadow-md); margin-bottom: 28px;
+}
+.gen-btn:hover:not(:disabled) { background: var(--navy-mid); box-shadow: var(--shadow-lg); }
+.gen-btn:active:not(:disabled) { transform: scale(0.99); }
+.gen-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-ico { color: var(--lime); display: flex; }
+.spinner { width: 17px; height: 17px; border: 2px solid rgba(255,255,255,0.2); border-top-color: var(--lime); border-radius: 50%; animation: spin 0.65s linear infinite; display: none; flex-shrink: 0; }
+.spinner.on { display: block; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ERROR */
+.err { background: rgba(239,68,68,0.07); border: 1px solid rgba(239,68,68,0.22); border-radius: 10px; padding: 12px 16px; color: #B91C1C; font-size: 13px; line-height: 1.5; display: none; margin-bottom: 20px; }
+
+/* OUTPUT CARDS */
+.out-label { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; display: none; }
+.outputs { display: flex; flex-direction: column; gap: 14px; }
+
+.out-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 16px; overflow: hidden; opacity: 0; transform: translateY(14px); transition: opacity 0.32s ease, transform 0.32s ease; box-shadow: var(--shadow-sm); }
+.out-card.show { opacity: 1; transform: translateY(0); }
+#card0 { border-color: rgba(245,158,11,0.3); }
+#card0 .out-hdr { background: var(--amber-soft); border-bottom-color: var(--amber-border); }
+#card1, #card2 { border-left: 3px solid var(--lime); }
+
+.out-hdr { display: flex; align-items: center; justify-content: space-between; padding: 13px 18px 12px; border-bottom: 1px solid var(--border); background: var(--bg); }
+.out-meta { display: flex; align-items: center; gap: 10px; }
+.out-num { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; font-weight: 500; color: var(--text-muted); background: var(--border); border-radius: 4px; padding: 2px 6px; letter-spacing: 0.3px; }
+#card0 .out-num { background: rgba(245,158,11,0.12); color: #92600A; }
+.out-title { font-size: 13px; font-weight: 600; color: var(--navy); }
+
+.chip { font-size: 10px; font-weight: 600; border-radius: 20px; padding: 2px 9px; }
+.chip-a { background: rgba(245,158,11,0.1); color: #92600A; border: 1px solid var(--amber-border); }
+.chip-l { background: var(--lime-soft); color: #4A7200; border: 1px solid var(--lime-border); }
+.chip-n { background: rgba(11,22,40,0.07); color: var(--navy); border: 1px solid rgba(11,22,40,0.12); }
+
+.copy-btn { background: none; border: 1px solid var(--border); color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 5px 10px; border-radius: 7px; cursor: pointer; transition: all 0.18s; display: flex; align-items: center; gap: 5px; white-space: nowrap; flex-shrink: 0; }
+.copy-btn:hover { border-color: var(--navy); color: var(--navy); background: rgba(11,22,40,0.04); }
+.copy-btn.ok { border-color: var(--green-ok); color: var(--green-ok); background: rgba(34,197,94,0.05); }
+
+.out-body { padding: 18px 20px; }
+.out-text { font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.8; color: var(--text-mid); white-space: pre-wrap; word-break: break-word; max-height: 400px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+.out-text::-webkit-scrollbar { width: 3px; }
+.out-text::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+#card0 .out-text { color: var(--amber-text); }
+.wait { color: var(--text-muted); font-style: italic; }
+
+.cur { display: inline-block; width: 2px; height: 13px; background: var(--lime-dark); animation: blink 0.85s step-end infinite; vertical-align: middle; margin-left: 1px; border-radius: 1px; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* FOOTER */
+.footer { margin-top: 44px; text-align: center; font-size: 11.5px; color: var(--text-muted); display: flex; align-items: center; justify-content: center; gap: 8px; }
+.fdot { width: 3px; height: 3px; border-radius: 50%; background: var(--border); display: inline-block; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <div class="top-bar">
+    <div class="logo">
+      <div class="logo-mark">
+        <svg width="24" height="15" viewBox="0 0 24 15"><text x="0" y="13" font-family="Inter,sans-serif" font-weight="800" font-size="13" fill="#A8E63D">GP</text></svg>
+      </div>
+      <span class="logo-name">Go<em>Perfect</em></span>
+    </div>
+    <div class="status-pill"><div class="dot"></div>AI Online</div>
+  </div>
+
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-eye">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        Sales Engine
+      </div>
+      <h1>One transcript.<br><em>Three outputs.</em></h1>
+      <p>Paste a prospect URL and meeting transcript. Get a pre-flight checklist, a Manus deck prompt, and a follow-up email — all grounded in what was actually said on the call.</p>
+      <div class="hero-tags">
+        <span class="htag hi">⚠ Pre-flight checklist</span>
+        <span class="htag">Manus deck prompt</span>
+        <span class="htag">Follow-up email</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="input-card">
+    <div class="card-label">Inputs</div>
+    <div class="two-col">
+      <div class="field">
+        <div class="field-label">Prospect website URL</div>
+        <input type="url" id="urlInput" placeholder="https://prospect.com" />
+      </div>
+      <div class="field">
+        <div class="field-label">Your name (sender)</div>
+        <input type="text" id="senderInput" placeholder="Elie" value="Elie" />
+      </div>
+    </div>
+    <div class="field">
+      <div class="field-label">Meeting transcript</div>
+      <textarea id="transcriptInput" placeholder="Paste full Fathom / Otter transcript — names, pain points, ATS, commitments, objections..."></textarea>
+    </div>
+  </div>
+
+  <button class="gen-btn" id="genBtn" onclick="generate()">
+    <div class="spinner" id="spinner"></div>
+    <div class="btn-ico" id="btnIco">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+    </div>
+    <span id="btnLabel">Generate All Three Outputs</span>
+  </button>
+
+  <div class="err" id="errMsg"></div>
+  <div class="out-label" id="outLabel">Outputs</div>
+
+  <div class="outputs">
+    <div class="out-card" id="card0">
+      <div class="out-hdr">
+        <div class="out-meta">
+          <span class="out-num">00</span>
+          <span class="out-title">Before You Send</span>
+          <span class="chip chip-a">⚠ Pre-flight</span>
+        </div>
+        <button class="copy-btn" onclick="copyCard('out0',this)">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copy
+        </button>
+      </div>
+      <div class="out-body"><div class="out-text" id="out0"></div></div>
+    </div>
+
+    <div class="out-card" id="card1">
+      <div class="out-hdr">
+        <div class="out-meta">
+          <span class="out-num">01</span>
+          <span class="out-title">Manus Deck Prompt</span>
+          <span class="chip chip-l">5 slides</span>
+        </div>
+        <button class="copy-btn" onclick="copyCard('out1',this)">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copy
+        </button>
+      </div>
+      <div class="out-body"><div class="out-text" id="out1"></div></div>
+    </div>
+
+    <div class="out-card" id="card2">
+      <div class="out-hdr">
+        <div class="out-meta">
+          <span class="out-num">02</span>
+          <span class="out-title">Follow-up Email</span>
+          <span class="chip chip-n">≤200 words</span>
+        </div>
+        <button class="copy-btn" onclick="copyCard('out2',this)">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copy
+        </button>
+      </div>
+      <div class="out-body"><div class="out-text" id="out2"></div></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <strong style="color:var(--navy);font-weight:700;">GoPerfect</strong>
+    <span class="fdot"></span>Sales Engine<span class="fdot"></span>Powered by Claude
+  </div>
+
+</div>
+<script>
+let fullOutput = '';
+
+async function generate() {
+  const url = document.getElementById('urlInput').value.trim();
+  const transcript = document.getElementById('transcriptInput').value.trim();
+  const sender = document.getElementById('senderInput').value.trim() || 'Elie';
+  if (!url || !transcript) { showErr('Please provide both the prospect website URL and the meeting transcript.'); return; }
+
+  const btn = document.getElementById('genBtn');
+  const spinner = document.getElementById('spinner');
+  const btnIco = document.getElementById('btnIco');
+  const btnLabel = document.getElementById('btnLabel');
+  const errMsg = document.getElementById('errMsg');
+
+  btn.disabled = true; spinner.classList.add('on'); btnIco.style.display = 'none';
+  btnLabel.textContent = 'Generating...'; errMsg.style.display = 'none';
+  ['out0','out1','out2'].forEach(id => document.getElementById(id).textContent = '');
+  ['card0','card1','card2'].forEach(id => document.getElementById(id).classList.remove('show'));
+  document.getElementById('outLabel').style.display = 'none';
+  fullOutput = '';
+
+  const sys = `You are a senior sales intelligence assistant for GoPerfect — an AI-powered recruiting platform that helps companies find and engage the right candidates faster using agentic AI. GoPerfect covers both outbound sourcing (60M+ profiles across LinkedIn, GitHub, Glassdoor, Crunchbase and more) and inbound CV screening, with integrations into major ATS platforms including BambooHR, Bullhorn, Greenhouse, iCIMS, and others.
+
+Silently extract from the transcript: prospect company name and industry, names and titles of everyone on the call, current pain points in their own words, current tools/ATS they use, volume signals (open roles, applicants, team size), specific roles or use cases mentioned, objections and open questions, commitments made, tone and personality of main contacts, and buying stage. Do not show this extraction. Use it to inform all three outputs.
+
+Produce THREE outputs in this exact order:
+
+---
+## OUTPUT 0: BEFORE YOU SEND
+## ⚠️ BEFORE YOU SEND — COMPLETE THESE FIRST
+
+**MUST RESOLVE (blocking — do not send without these):**
+- [ ] [specific item + which slide or email line it affects]
+
+**SHOULD RESOLVE (improves quality significantly):**
+- [ ] [specific item]
+
+**NICE TO KNOW (not blocking):**
+- [ ] [specific item]
+
+Rules: Maximum 8 items total. Always flag pricing as MUST RESOLVE if no numbers confirmed. Always flag ATS as MUST RESOLVE if promised but not confirmed live. Flag budget authority as SHOULD RESOLVE if unclear. Flag unsupported hiring markets (supported: US, UK, Germany, France, Australia, Israel) as SHOULD RESOLVE. Omit empty categories.
+
+---
+## OUTPUT 1: MANUS DECK PROMPT
+A complete copy-paste-ready prompt for Manus to generate a 5-slide commercial presentation.
+
+Design: Navy (#0D1B2A), white, electric blue (#1A6FE6). Enterprise SaaS feel. Minimal text. Strong headlines. GoPerfect logo on every footer. Bespoke — prospect name throughout.
+
+Slide 1 — Title: "GoPerfect × [PROSPECT]", subtitle "Commercial Proposal — [MONTH YEAR]", full-bleed navy.
+Slide 2 — What We Heard: "What we heard from [PROSPECT]" — 4-5 bullets from transcript with numbers, role types, direct quotes. One quote at bottom.
+Slide 3 — Gap + Opportunity: "The missing piece" — two columns. Left "Today at [PROSPECT]": 3-4 pain points in their language. Right "With GoPerfect": only capabilities that address those pains.
+Slide 4 — Commercial Proposal (centrepiece, most visual attention): Title "Your proposal, [FIRST NAME]", subtitle "Per-position pricing. No seat limits. No credit limits. Reusable slots." Three 12-month cards + one 36-month card. Use slot counts from transcript or sensible defaults. Each card: slot count, checkmark features, [TBC] pricing. All plans: outbound sourcing, inbound screening, ATS integration (name their ATS), unlimited users, unlimited emails. 36-month card: 5% partnership rate, "Best Value" badge, priority support. Footer note: "Slots are reusable. Monthly billing."
+Slide 5 — Next Steps: "How we move forward" — 4 numbered steps from actual call commitments. Specific closing line. GoPerfect contact + logo.
+
+Rules: First name throughout. Tone matches prospect. No fake metrics or invented references. Start with: "Create a polished, professional 5-slide commercial presentation FROM GoPerfect TO [PROSPECT NAME]..."
+
+---
+## OUTPUT 2: FOLLOW-UP EMAIL
+Post-call email from ${sender} at GoPerfect. Max 200 words. Open with one specific personal reference from the call. Numbered action items — one line each, what you are doing (not what you discussed). Single clear next step at close. Sign off: "${sender} / GoPerfect". Subject: specific and conversational. Tone: warm, direct, peer-to-peer. Nothing not grounded in transcript.
+
+Format:
+SUBJECT: [subject line]
+BODY: [email]`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, system: sys, messages: [{ role: 'user', content: `COMPANY URL: ${url}\n\nMEETING TRANSCRIPT:\n${transcript}` }], stream: true })
+    });
+
+    if (!response.ok) { const e = await response.json(); throw new Error(e.error?.message || 'API error'); }
+
+    document.getElementById('outLabel').style.display = 'block';
+    ['card0','card1','card2'].forEach((id,i) => setTimeout(() => document.getElementById(id).classList.add('show'), i*80));
+    document.getElementById('out0').innerHTML = '<span class="cur"></span>';
+    document.getElementById('out1').innerHTML = '<span class="wait">Waiting...</span>';
+    document.getElementById('out2').innerHTML = '<span class="wait">Waiting...</span>';
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buf = '';
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buf += decoder.decode(value, { stream: true });
+      const lines = buf.split('\n'); buf = lines.pop();
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        const d = line.slice(6).trim();
+        if (d === '[DONE]') continue;
+        try { const p = JSON.parse(d); if (p.type === 'content_block_delta' && p.delta?.text) { fullOutput += p.delta.text; renderOutputs(fullOutput); } } catch {}
+      }
+    }
+    renderOutputs(fullOutput, true);
+  } catch(e) { showErr('Error: ' + e.message); }
+  finally { btn.disabled = false; spinner.classList.remove('on'); btnIco.style.display = 'flex'; btnLabel.textContent = 'Generate All Three Outputs'; }
+}
+
+function renderOutputs(text, final = false) {
+  const i0 = text.indexOf('## OUTPUT 0:'), i1 = text.indexOf('## OUTPUT 1:'), i2 = text.indexOf('## OUTPUT 2:');
+  let p0='', p1='', p2='';
+  if (i0!==-1) { const e=i1!==-1?i1:text.length; p0=text.slice(i0,e).replace(/^## OUTPUT 0:[^\n]*\n/,'').replace(/^-{3,}\s*\n?/,'').trim(); }
+  if (i1!==-1) { const e=i2!==-1?i2:text.length; p1=text.slice(i1,e).replace(/^## OUTPUT 1:[^\n]*\n/,'').replace(/^-{3,}\s*\n?/,'').trim(); }
+  if (i2!==-1) { p2=text.slice(i2).replace(/^## OUTPUT 2:[^\n]*\n/,'').replace(/^-{3,}\s*\n?/,'').trim(); }
+  const el0=document.getElementById('out0'), el1=document.getElementById('out1'), el2=document.getElementById('out2');
+  const cur='<span class="cur"></span>', wait='<span class="wait">Waiting...</span>';
+  if (final) { el0.textContent=p0; el1.textContent=p1; el2.textContent=p2; }
+  else {
+    if (i2!==-1) { el0.textContent=p0; el1.textContent=p1; el2.innerHTML=esc(p2)+cur; }
+    else if (i1!==-1) { el0.textContent=p0; el1.innerHTML=esc(p1)+cur; el2.innerHTML=wait; }
+    else if (i0!==-1) { el0.innerHTML=esc(p0)+cur; el1.innerHTML=wait; el2.innerHTML=wait; }
+  }
+  [el0,el1,el2].forEach(el=>el.scrollTop=el.scrollHeight);
+}
+
+function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function showErr(msg) { const e=document.getElementById('errMsg'); e.textContent=msg; e.style.display='block'; }
+
+async function copyCard(id, btn) {
+  try {
+    await navigator.clipboard.writeText(document.getElementById(id).textContent);
+    btn.classList.add('ok');
+    btn.innerHTML='<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 15 4 10"/></svg> Copied';
+    setTimeout(() => { btn.classList.remove('ok'); btn.innerHTML='<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copy'; }, 2000);
+  } catch(e) {}
+}
+</script>
+</body>
+</html>
